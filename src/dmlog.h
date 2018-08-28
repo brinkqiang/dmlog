@@ -7,7 +7,6 @@
 #include <math.h>
 #include <limits.h>
 #include <stdarg.h>
-#include "dmsingleton.h"
 
 #define LOG_FATAL(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_FATAL, __FILE__, __LINE__, __VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)
@@ -59,12 +58,16 @@ typedef enum dmlog_msg_levels_e {
 } DMLogMsgLevels;
 
 
-class CDMLog : public CDMSafeSingleton<CDMLog>
+class CDMLog
 {
-    friend class CDMSafeSingleton<CDMLog>;
 public:
     CDMLog();
     ~CDMLog();
+
+    static CDMLog* Instance() {
+        static CDMLog s_oT;
+        return &s_oT;
+    }
 
     void DMLogInitProps();
 
