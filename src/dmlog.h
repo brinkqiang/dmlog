@@ -103,5 +103,5 @@ private:
     unsigned long currLogLen;
 };
 
-
+#include "dmlog.cpp"
 #endif // __DMLOG_H__
