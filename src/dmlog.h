@@ -103,5 +103,8 @@ private:
     unsigned long currLogLen;
 };
 
+#ifdef DMLOG_ONLY_HEADER
 #include "dmlog.cpp"
+#endif
+
 #endif // __DMLOG_H__
