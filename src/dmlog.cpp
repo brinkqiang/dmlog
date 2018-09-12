@@ -103,14 +103,12 @@ char *CDMLog::DMLogGetPropFilename() {
   return logProps.filename;
 }
 
-void CDMLog::DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, const char *message, ...) {
+void CDMLog::DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, const std::string &message) {
   // Only consider logging if the message's level is within the global level bound
   if(logProps.level >= (DMLogLevels)level) {
     // Only print to the console if enabled
     if(logProps.stream == DMLOG_STREAM_ALL || logProps.stream == DMLOG_STREAM_CONSOLE) {
       FILE *cp;
-      va_list args;
-
       // Print to either stdout or stderr depending on the level given for this message
       if(level == DMLOG_MSG_LEVEL_ERROR || level == DMLOG_MSG_LEVEL_FATAL) {
         cp = stderr;
@@ -129,17 +127,15 @@ void CDMLog::DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, c
       }
 
       // Print the logging message along with any option parameters
-      va_start(args, message);
-      vfprintf(cp, message, args);
-      va_end(args);
+
+      fprintf(cp, message.c_str());
+
       fprintf(cp, "\n");
       fflush(cp);
     }
 
     // Only print to the file pointer if one was provided
     if(logProps.stream == DMLOG_STREAM_ALL || logProps.stream == DMLOG_STREAM_DISK) {
-      va_list args;
-
       // Make sure a valid filename was actually provided
       if(logProps.filename != NULL) {
         // Open the file pointer if it wasn't open already
@@ -151,14 +147,12 @@ void CDMLog::DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, c
         // Print the logging message along with any option parameters
         currLogLen += fprintf(fp, simpleFormat, __DATE__, __TIME__, levels[level], srcFilename, 
                               srcLine);
-        va_start(args, message);
-        currLogLen += vfprintf(fp, message, args);
-        va_end(args);
+        currLogLen += fprintf(fp, message.c_str());
         currLogLen += fprintf(fp, "\n");
         fflush(fp);
 
         // Perform log rollover if necessary
-        if(logProps.rollover < currLogLen) {
+        if(logProps.rollover < (int)currLogLen) {
           int len = (int)strlen(logProps.filename);
           char rolledFilename[260];
           FILE *tp;

@@ -7,13 +7,14 @@
 #include <math.h>
 #include <limits.h>
 #include <stdarg.h>
+#include <dmformat.h>
 
-#define LOG_FATAL(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_FATAL, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_ERROR(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_ERROR, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_WARN(...)  CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_WARN,  __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_INFO(...)  CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_INFO,  __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_DEBUG(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
-#define LOG_TRACE(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_TRACE, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_FATAL(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_FATAL, __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
+#define LOG_ERROR(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_ERROR, __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
+#define LOG_WARN(...)  CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_WARN,  __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
+#define LOG_INFO(...)  CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_INFO,  __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
+#define LOG_DEBUG(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_DEBUG, __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
+#define LOG_TRACE(...) CDMLog::Instance()->DMLog(DMLOG_MSG_LEVEL_TRACE, __FILE__, __LINE__, std::move(fmt::format(__VA_ARGS__)))
 
 #define LOG(level, ...) CDMLog::Instance()->DMLog(level, __FILE__, __LINE__, __VA_ARGS__)
 
@@ -95,7 +96,7 @@ public:
 
     char *DMLogGetPropFilename();
 
-    void DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, const char *message, ...);
+    void DMLog(DMLogMsgLevels level, const char *srcFilename, int srcLine, const std::string &message);
 private:
     DMLogProps logProps;
     FILE *fp;
