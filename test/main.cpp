@@ -1,10 +1,10 @@
-#include "dmlog.hpp"
+#include "dmlog.h"
 
 int main(int argc, char *argv[]) {
-
+  CDMLog::Instance()->DMLogSetPropFilename("demo.log");
   LOG_INFO("This is a basic logging message.");
 
-  LOG_INFO("This message includes %d substitutions, similar to how %s work.", 2, 
+  LOG_INFO("This message includes {} substitutions, similar to how {} work.", 2, 
            "printf(), fprintf(), etc.");
 
   LOG_FATAL("This is a fatal message with magenta coloring.");
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
   LOG_DEBUG("This is a debugging message with blue coloring.");
   LOG_TRACE("This is a tracing message with cyan coloring.");
 
-  CDMLog::Instance()->DMLogSetPropFilename("demo.log");
+
   LOG_INFO("This will be printed to the console, as well as \"demo.log\" as its first entry.");
 
   CDMLog::Instance()->DMLogSetPropStream(DMLOG_STREAM_DISK);
