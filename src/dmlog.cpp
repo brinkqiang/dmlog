@@ -26,7 +26,7 @@ void CDMLog::DMLogInitProps() {
   logProps.level = DMLOG_LEVEL_INFO;
   logProps.stream = DMLOG_STREAM_ALL;
   logProps.color = DMLOG_COLOR_ON;
-  logProps.rollover = 8388608;
+  logProps.rollover = LONG_MAX;
   logProps.filename = NULL;
   fp = NULL;
   currRolloverAppend = 1;
