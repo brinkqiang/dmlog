@@ -25,8 +25,8 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __DMFMT_FORMAT_H__
-#define __DMFMT_FORMAT_H__
+#ifndef __DMFORMAT_H_INCLUDE__
+#define __DMFORMAT_H_INCLUDE__
 
 #define FMT_HEADER_ONLY
 #include <algorithm>
@@ -52,7 +52,7 @@
 # define FMT_ICC_VERSION 0
 #endif
 
-#include "dmcore.h"
+#include "dmformatcore.h"
 
 #if FMT_GCC_VERSION >= 406 || FMT_CLANG_VERSION
 # pragma GCC diagnostic push
@@ -3417,6 +3417,66 @@ auto join(const Range &range, wstring_view sep)
 }
 #endif
 
+template <typename T = int>
+inline T to_number(const std::string& strIn)
+{
+    return std::stoi(strIn);
+}
+
+template <>
+inline int to_number(const std::string& strIn)
+{
+    return std::stoi(strIn);
+}
+
+template <>
+inline unsigned int to_number(const std::string& strIn)
+{
+    return std::stoul(strIn);
+}
+
+template <>
+inline long to_number(const std::string& strIn)
+{
+    return std::stol(strIn);
+}
+
+template <>
+inline unsigned long to_number(const std::string& strIn)
+{
+    return std::stoul(strIn);
+}
+
+template <>
+inline long long to_number(const std::string& strIn)
+{
+    return std::stoll(strIn);
+}
+
+template <>
+inline unsigned long long to_number(const std::string& strIn)
+{
+    return std::stoull(strIn);
+}
+
+template <>
+inline float to_number(const std::string& strIn)
+{
+    return std::stof(strIn);
+}
+
+template <>
+inline double to_number(const std::string& strIn)
+{
+    return std::stod(strIn);
+}
+
+template <>
+inline long double to_number(const std::string& strIn)
+{
+    return std::stold(strIn);
+}
+
 /**
   \rst
   Converts *value* to ``std::string`` using the default format for type *T*.
@@ -3935,4 +3995,6 @@ FMT_END_NAMESPACE
 # pragma GCC diagnostic pop
 #endif
 
-#endif  // __DMFMT_FORMAT_H__
+#include "dmprintf.h"
+
+#endif // __DMFORMAT_H_INCLUDE__
