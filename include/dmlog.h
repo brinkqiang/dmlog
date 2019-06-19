@@ -66,10 +66,6 @@ private:
 
 };
 
-#ifdef DMLOG_ONLY_HEADER
-#include "dmlog.cpp"
-#endif
-
 #define DMLOG_INIT() CDMLog::Instance()
 
 #endif // __DMLOG_H__
