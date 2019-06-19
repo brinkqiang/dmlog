@@ -31,6 +31,8 @@
 #include "dmutil.h"
 #include <spdlog/spdlog.h>
 #include "spdlog/sinks/daily_file_sink.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/basic_file_sink.h"
 
 #define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->critical(__VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->error(__VA_ARGS__)
@@ -47,7 +49,17 @@ public:
         std::string strPath = DMGetRootPath() + "/logs";
         std::string strFile = DMGetRootPath() + "/logs/" + DMGetExeName() + ".txt";
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
-        my_logger = spdlog::daily_logger_mt("daily_logger", strFile, 2, 30);
+
+        auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+        console_sink->set_level(spdlog::level::trace);
+        console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
+
+        auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile, 2, 30);
+        daily_logger->set_level(spdlog::level::trace);
+        daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
+        spdlog::logger logger("multi_sink", { console_sink, daily_logger });
+        logger.set_level(spdlog::level::trace);
+        my_logger = logger.clone(DMGetExeName());
     }
     ~CDMLog()
     {
