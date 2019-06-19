@@ -29,6 +29,7 @@
 #include <limits.h>
 #include <stdarg.h>
 #include "dmutil.h"
+#include "dmformat.h"
 #include <spdlog/spdlog.h>
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
