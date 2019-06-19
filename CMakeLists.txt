@@ -16,7 +16,7 @@ MESSAGE(STATUS "VERSION: ${DMLOG_VERSION}")
 
 ADD_DEFINITIONS(-DUSE_DMLOG)
 
-ModuleImport("dmlog" "thirdparty/dmlog")
+#ModuleImport("dmlog" "thirdparty/dmlog")
 
 IF (WIN32)
     INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/src/windows)
