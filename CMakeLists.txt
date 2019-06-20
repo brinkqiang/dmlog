@@ -7,6 +7,8 @@ INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
 ModuleSetCompileOptions()
 
+SET(CMAKE_CXX_CPPCHECK "cppcheck")
+
 SET(DMLOG_VERSION_MAJOR "1")
 SET(DMLOG_VERSION_MINOR "0")
 SET(DMLOG_VERSION_PATCH "1")
