@@ -30,7 +30,7 @@
 #include <stdarg.h>
 #include "dmutil.h"
 #include "dmformat.h"
-#include <spdlog/spdlog.h>
+#include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
 
@@ -47,7 +47,7 @@ public:
     CDMLog()
     {
         std::string strPath = DMGetRootPath() + "/logs";
-        std::string strFile = DMGetRootPath() + "/logs/" + DMGetExeName() + ".txt";
+        std::string strFile = DMGetRootPath() + "/logs/" + DMGetExeName() + ".log";
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
