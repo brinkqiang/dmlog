@@ -61,10 +61,14 @@ public:
         spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
         logger.set_level(spdlog::level::trace);
         my_logger = logger.clone(DMGetExeName());
+
+        my_logger->flush_on(spdlog::level::warn);
+
+        spdlog::flush_every(std::chrono::seconds(1));
     }
     ~CDMLog()
     {
-
+        spdlog::drop_all();
     }
 
     static CDMLog* Instance() {
