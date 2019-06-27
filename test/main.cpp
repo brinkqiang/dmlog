@@ -2,6 +2,7 @@
 
 int main(int argc, char *argv[])
 {
+    DMBench oBench;
     LOG_CRITICAL("hello world {}.", 2019);
     LOG_INFO("This is a basic logging message.");
 
@@ -10,6 +11,7 @@ int main(int argc, char *argv[])
 
     LOG_INFO("message test start");
     for (int i = 0; i < 1000000; i++) {
+        oBench++;
         LOG_INFO("This message is 116 characters long including the info that comes before it. {}", i);
     }
     LOG_INFO("message test end");
