@@ -28,13 +28,16 @@
 #include <math.h>
 #include <limits.h>
 #include <stdarg.h>
+
+#include <chrono>
+
 #include "dmutil.h"
 #include "dmformat.h"
 #include "dmtime.h"
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-#include <chrono>
+
 
 #define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->critical(__VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->error(__VA_ARGS__)
@@ -104,7 +107,7 @@ struct DMBench : public DMLogTimer
     void stop()
     {
         auto dur = std::chrono::system_clock::now() - tp;
-        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, 1L));
+        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, 1ULL));
         auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() / 10;
         if (perf < 1)
             LOG_DEBUG("Performance: {:03.2f}  w/s", perf);
@@ -121,16 +124,16 @@ struct DMBench : public DMLogTimer
         ++val;
         return *this;
     }
-    DMBench &operator+=(int v)
-    {
-        ++val;
-        return *this;
-    }
-    DMBench &add(long v)
+    DMBench &operator+=(uint64_t v)
     {
         val += v;
         return *this;
     }
-    long val;
+    DMBench &add(uint64_t v)
+    {
+        val += v;
+        return *this;
+    }
+    uint64_t val;
 };
 #endif // __DMLOG_H__
