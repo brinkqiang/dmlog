@@ -34,6 +34,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include <chrono>
 
 #define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->critical(__VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->error(__VA_ARGS__)
@@ -52,7 +53,7 @@ public:
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::trace);
+        console_sink->set_level(spdlog::level::err);
         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
         auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile, 2, 30);
@@ -80,9 +81,56 @@ public:
 
 private:
     std::shared_ptr<spdlog::logger> my_logger;
-
 };
 
 #define DMLOG_INIT() CDMLog::Instance()
 
+
+struct DMLogTimer
+{
+    DMLogTimer() : tp(std::chrono::system_clock::now()) {}
+    virtual ~DMLogTimer()
+    {
+        auto dur = std::chrono::system_clock::now() - tp;
+        LOG_DEBUG("Cost {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(dur).count());
+    }
+    std::chrono::system_clock::time_point tp;
+};
+
+struct DMBench : public DMLogTimer
+{
+    DMBench() : val(0) {}
+    virtual ~DMBench() { stop(); }
+    void stop()
+    {
+        auto dur = std::chrono::system_clock::now() - tp;
+        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, 1L));
+        auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() / 10;
+        if (perf < 1)
+            LOG_DEBUG("Performance: {:03.2f}  w/s", perf);
+        else
+            LOG_DEBUG("Performance: {} w/s", perf);
+    }
+    DMBench &operator++()
+    {
+        ++val;
+        return *this;
+    }
+    DMBench &operator++(int)
+    {
+        ++val;
+        return *this;
+    }
+    DMBench &operator+=(int v)
+    {
+        ++val;
+        return *this;
+    }
+    DMBench &add(long v)
+    {
+        val += v;
+        return *this;
+    }
+    long val;
+};
 #endif // __DMLOG_H__
