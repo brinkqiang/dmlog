@@ -310,7 +310,7 @@ static const char* DMGetExeName() {
             strcpy(path, temp);
             return;
         }
-
+        temp[ret] = '\0';
         char* del = strrchr(temp, PATH_DELIMITER);
 
         if (NULL == del) {
