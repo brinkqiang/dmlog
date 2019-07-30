@@ -1,7 +1,9 @@
 #include "dmlog.h"
-
+#include "dmutil.h"
 int main(int argc, char *argv[])
 {
+    LOG_CRITICAL("hello world {}.", DMGetExeName());
+    return 0;
     DMBench oBench;
     LOG_CRITICAL("hello world {}.", 2019);
     LOG_INFO("This is a basic logging message.");
@@ -12,7 +14,7 @@ int main(int argc, char *argv[])
     LOG_INFO("message test start");
     for (int i = 0; i < 1000000; i++) {
         oBench++;
-        LOG_INFO("This message is 116 characters long including the info that comes before it. {}", i);
+        LOG_WARN("This message is 116 characters long including the info that comes before it. {}", i);
     }
     LOG_INFO("message test end");
     LOG_INFO("This message will cause the file to exceed the rollover value, which triggers it to "
@@ -20,6 +22,6 @@ int main(int argc, char *argv[])
         "original filename is then opened and used in its place.");
     LOG_INFO("This message will be the first message in the new log file.");
 
-    LOG_INFO("This concludes the feature demo for dmlog!");
+    LOG_CRITICAL("This concludes the feature demo for dmlog!");
     return 0;
 }
