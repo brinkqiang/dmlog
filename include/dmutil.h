@@ -135,7 +135,8 @@ static inline bool DMCreateDirectories(const char* dir_name) {
     }
 
     char path[MAX_PATH];
-    strncpy(path, dir_name, sizeof(path));
+    path[MAX_PATH-1] = '\0';
+    strcpy(path, dir_name, sizeof(path) - 1);
 
     char* p = strrchr(path, PATH_DELIMITER);
 
