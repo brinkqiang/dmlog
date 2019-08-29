@@ -56,7 +56,7 @@ public:
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::warn);
+        console_sink->set_level(spdlog::level::err);
         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
         auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile, 2, 30);
@@ -107,7 +107,7 @@ struct DMBench : public DMLogTimer
     void stop()
     {
         auto dur = std::chrono::system_clock::now() - tp;
-        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, 1ULL));
+        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, (uint64_t)1));
         auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() / 10;
         if (perf < 1)
             LOG_DEBUG("Performance: {:03.2f}  w/s", perf);
