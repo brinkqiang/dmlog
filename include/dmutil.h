@@ -355,7 +355,7 @@ static const char *DMGetExeName()
 
         if (NULL == point)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
@@ -365,11 +365,11 @@ static const char *DMGetExeName()
 
         if (NULL == del)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
-        strcpy(path, del + 1);
+        SafeStrCopy(path, del + 1);
     });
 
     return path;
@@ -383,7 +383,7 @@ static const char *DMGetExeName()
 
         if (ret != 0)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
@@ -391,7 +391,7 @@ static const char *DMGetExeName()
 
         if (NULL == p)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
@@ -401,11 +401,11 @@ static const char *DMGetExeName()
 
             if (NULL == del)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
-        strcpy(path, del + 1);
+        SafeStrCopy(path, del + 1);
     });
     return path;
 #else
@@ -417,7 +417,7 @@ static const char *DMGetExeName()
 
         if (ret < 0 || ret >= MAX_PATH)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
         temp[ret] = '\0';
@@ -425,11 +425,11 @@ static const char *DMGetExeName()
 
         if (NULL == del)
         {
-            strcpy(path, temp);
+            SafeStrCopy(path, temp);
             return;
         }
 
-        strcpy(path, del + 1);
+        SafeStrCopy(path, del + 1);
     });
 
     return path;
