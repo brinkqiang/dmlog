@@ -43,6 +43,79 @@ static inline struct tm* gmtime_r( const time_t* timep, struct tm* result ) {
 }
 #endif
 
+inline char* __SafeStrCopy(char *des, size_t des_len, const char *src)
+{
+    if(NULL == src)
+    {
+        des[0] = '\0';
+        return des;
+    }
+    size_t len = strnlen(src, des_len);
+    if (len >= des_len)
+    {
+        //log
+    }
+
+    des[des_len-1] = '\0';
+    return len < des_len ? strcpy(des, src) : strncpy(des, src, des_len-1);
+}
+
+template <size_t N>
+inline char* SafeStrCopy(unsigned char (&des)[N], const char* src)
+{
+    return __SafeStrCopy((char*)des, N, src);
+}
+
+template <size_t N>
+    inline char* SafeStrCopy(char (&des)[N], const char* src)
+    {
+        return __SafeStrCopy(des, N, src);
+    }
+template <size_t N>
+    inline char* SafeStrCopy(char (&des)[N], const std::string& src)
+    {
+        return __SafeStrCopy(des, N, src.c_str());
+    }
+
+template <typename T>
+    inline void Zero(T& t)
+    {
+        memset(&t, 0, sizeof(t));
+    }
+template <typename T>
+    inline void Zero(T* t)
+    {
+        memset(t, 0, sizeof(*t));
+    }
+
+
+template <size_t N>
+    inline void Zero(char (&des)[N])
+    {
+        des[0] = '\0';
+        des[sizeof(des)-1] = '\0';
+    }
+template <size_t N>
+    inline void ZeroString(char (&des)[N])
+    {
+        des[0] = '\0';
+        des[sizeof(des)-1] = '\0';
+    }
+template <size_t N>
+    inline void SafeSprintf(char (&des)[N], const char *format, ...)
+    {
+        va_list args;
+        va_start(args,format);
+        int len = vsnprintf(des, sizeof(des)-1, format, args);
+        des[sizeof(des)-1] = '\0';
+        if (len < 0)
+        {
+            //log
+        }
+        va_end(args);
+    }
+
+
 static inline std::string DMFormatIP( unsigned int dwIP ) {
     sockaddr_in s;
     s.sin_family = AF_INET;
@@ -135,8 +208,7 @@ static inline bool DMCreateDirectories(const char* dir_name) {
     }
 
     char path[MAX_PATH];
-    path[MAX_PATH-1] = '\0';
-    strcpy(path, dir_name, sizeof(path) - 1);
+    SafeStrCopy(path, dir_name);
 
     char* p = strrchr(path, PATH_DELIMITER);
 
