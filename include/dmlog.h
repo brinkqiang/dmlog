@@ -68,7 +68,7 @@ public:
 
         my_logger->flush_on(spdlog::level::warn);
 
-        spdlog::flush_every(std::chrono::seconds(1));
+        spdlog::flush_every(std::chrono::seconds(0));
     }
     ~CDMLog()
     {
