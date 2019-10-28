@@ -22,7 +22,7 @@ Copyright (c) 2013-2018 brinkqiang (brink.qiang@gmail.com)
 [win-link]:  https://ci.appveyor.com/project/brinkqiang/dmlog "AppVeyor build status"
 
 ## Intro
-dmlog
+dmlog based on spdlog
 ```cpp
 ```
 ## Contacts
