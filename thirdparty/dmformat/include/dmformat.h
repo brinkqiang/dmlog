@@ -36,7 +36,7 @@
 #include <limits>
 #include <memory>
 #include <stdexcept>
-#include "dmtypes.h"
+#include <cstdint>
 
 #ifdef __clang__
 # define FMT_CLANG_VERSION (__clang_major__ * 100 + __clang_minor__)
