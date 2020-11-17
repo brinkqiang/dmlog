@@ -56,10 +56,11 @@ public:
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::err);
+        console_sink->set_level(spdlog::level::trace);
         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
-        auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile, 2, 30);
+        auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile,
+                            2, 30);
         daily_logger->set_level(spdlog::level::trace);
         daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
         spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
@@ -75,12 +76,16 @@ public:
         spdlog::drop_all();
     }
 
-    static CDMLog* Instance() {
+    static CDMLog* Instance()
+    {
         static CDMLog s_oT;
         return &s_oT;
     }
 
-    inline std::shared_ptr<spdlog::logger> GetLogger() { return my_logger; }
+    inline std::shared_ptr<spdlog::logger> GetLogger()
+    {
+        return my_logger;
+    }
 
 private:
     std::shared_ptr<spdlog::logger> my_logger;
@@ -95,7 +100,8 @@ struct DMLogTimer
     virtual ~DMLogTimer()
     {
         auto dur = std::chrono::system_clock::now() - tp;
-        LOG_DEBUG("Cost {} ms", std::chrono::duration_cast<std::chrono::milliseconds>(dur).count());
+        LOG_DEBUG("Cost {} ms", std::chrono::duration_cast<std::chrono::milliseconds>
+                  (dur).count());
     }
     std::chrono::system_clock::time_point tp;
 };
@@ -103,33 +109,44 @@ struct DMLogTimer
 struct DMBench : public DMLogTimer
 {
     DMBench() : val(0) {}
-    virtual ~DMBench() { stop(); }
+    virtual ~DMBench()
+    {
+        stop();
+    }
     void stop()
     {
         auto dur = std::chrono::system_clock::now() - tp;
-        LOG_DEBUG("Per op: {} ns", std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(val, (uint64_t)1));
-        auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>(dur).count() / 10;
+        LOG_DEBUG("Per op: {} ns",
+                  std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(
+                      val, (uint64_t)1));
+        auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>
+                    (dur).count() / 10;
+
         if (perf < 1)
+        {
             LOG_DEBUG("Performance: {:03.2f}  w/s", perf);
+        }
         else
+        {
             LOG_DEBUG("Performance: {} w/s", perf);
+        }
     }
-    DMBench &operator++()
+    DMBench& operator++()
     {
         ++val;
         return *this;
     }
-    DMBench &operator++(int)
+    DMBench& operator++(int)
     {
         ++val;
         return *this;
     }
-    DMBench &operator+=(uint64_t v)
+    DMBench& operator+=(uint64_t v)
     {
         val += v;
         return *this;
     }
-    DMBench &add(uint64_t v)
+    DMBench& add(uint64_t v)
     {
         val += v;
         return *this;

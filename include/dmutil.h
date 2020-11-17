@@ -24,6 +24,7 @@
 
 #include "dmos.h"
 
+#include <atomic>
 #include <mutex>
 
 #ifdef __APPLE__
@@ -33,191 +34,101 @@
 // tolua_begin
 
 #ifdef WIN32
-static inline struct tm *localtime_r(const time_t *timep, struct tm *result)
-{
-    localtime_s(result, timep);
+static inline struct tm* localtime_r( const time_t* timep, struct tm* result ) {
+    localtime_s( result, timep );
     return result;
 }
-static inline struct tm *gmtime_r(const time_t *timep, struct tm *result)
-{
-    gmtime_s(result, timep);
+static inline struct tm* gmtime_r( const time_t* timep, struct tm* result ) {
+    gmtime_s( result, timep );
     return result;
 }
 #endif
 
-static inline char *__SafeStrCopy(char *des, size_t des_len, const char *src)
-{
-    if (NULL == src)
-    {
-        des[0] = '\0';
-        return des;
-    }
-    size_t len = strnlen(src, des_len);
-    if (len >= des_len)
-    {
-        //log
-    }
-
-    des[des_len - 1] = '\0';
-    return len < des_len ? strcpy(des, src) : strncpy(des, src, des_len - 1);
-}
-
-template <size_t N>
-static inline char *SafeStrCopy(unsigned char (&des)[N], const char *src)
-{
-    return __SafeStrCopy((char *)des, N, src);
-}
-
-template <size_t N>
-static inline char *SafeStrCopy(char (&des)[N], const char *src)
-{
-    return __SafeStrCopy(des, N, src);
-}
-
-template <size_t N>
-static inline char *SafeStrCopy(char (&des)[N], const std::string &src)
-{
-    return __SafeStrCopy(des, N, src.c_str());
-}
-
-template <typename T>
-static inline void Zero(T &t)
-{
-    memset(&t, 0, sizeof(t));
-}
-template <typename T>
-static inline void Zero(T *t)
-{
-    memset(t, 0, sizeof(*t));
-}
-
-template <size_t N>
-static inline void Zero(char (&des)[N])
-{
-    des[0] = '\0';
-    des[sizeof(des) - 1] = '\0';
-}
-template <size_t N>
-static inline void ZeroString(char (&des)[N])
-{
-    des[0] = '\0';
-    des[sizeof(des) - 1] = '\0';
-}
-template <size_t N>
-static inline void SafeSprintf(char (&des)[N], const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    int len = vsnprintf(des, sizeof(des) - 1, format, args);
-    des[sizeof(des) - 1] = '\0';
-    if (len < 0)
-    {
-        //log
-    }
-    va_end(args);
-}
-
-static inline std::string DMFormatIP(unsigned int dwIP)
-{
+static inline std::string DMFormatIP( unsigned int dwIP ) {
     sockaddr_in s;
     s.sin_family = AF_INET;
     s.sin_addr.s_addr = dwIP;
-    return inet_ntoa(s.sin_addr);
+    return inet_ntoa( s.sin_addr );
 }
 
-static inline unsigned int DMFormatIP(const std::string &strIp)
-{
-    return inet_addr(strIp.c_str());
+static inline unsigned int DMFormatIP( const std::string& strIp ) {
+    return inet_addr( strIp.c_str() );
 }
 
-static inline unsigned short DMFormatPort(const std::string &strPort)
-{
-    return htons(atoi(strPort.c_str()));
+static inline unsigned short DMFormatPort( const std::string& strPort ) {
+    return htons( atoi( strPort.c_str() ) );
 }
 
-static inline unsigned short DMFormatPort(unsigned short wPort)
-{
-    return htons(wPort);
+static inline unsigned short DMFormatPort( unsigned short wPort ) {
+    return htons( wPort );
 }
 
-static inline std::string DMFormatDateTime(time_t tVal = time(0),
-                                           const char *pFormat = "%Y-%m-%d %H:%M:%S")
-{
+static inline std::string DMFormatDateTime( time_t tVal = time( 0 ),
+        const char* pFormat = "%Y-%m-%d %H:%M:%S" ) {
     struct tm Tm = {0};
 
-    if (localtime_r(&tVal, &Tm))
-    {
+    if ( localtime_r( &tVal, &Tm ) ) {
         char szBuf[128];
-        strftime(szBuf, sizeof(szBuf), pFormat, &Tm);
+        strftime( szBuf, sizeof( szBuf ), pFormat, &Tm );
         return szBuf;
     }
 
     return "";
 }
 
-static inline time_t DMFormatDateTime(const std::string &strTime,
-                                      const char *pFormat = "%d-%d-%d %d:%d:%d")
-{
+static inline time_t DMFormatDateTime( const std::string& strTime,
+                                       const char* pFormat =  "%d-%d-%d %d:%d:%d" ) {
     time_t ret = 0;
     struct tm tmMake = {0};
 
-    if (6 == sscanf(strTime.c_str(), pFormat, &tmMake.tm_year, &tmMake.tm_mon,
-                    &tmMake.tm_mday, &tmMake.tm_hour, &tmMake.tm_min, &tmMake.tm_sec))
-    {
+    if ( 6 == sscanf( strTime.c_str(), pFormat, &tmMake.tm_year, &tmMake.tm_mon,
+                      &tmMake.tm_mday, &tmMake.tm_hour, &tmMake.tm_min, &tmMake.tm_sec ) ) {
         tmMake.tm_year -= 1900;
         tmMake.tm_mon -= 1;
-        ret = mktime(&tmMake);
+        ret = mktime( &tmMake );
     }
 
     return ret;
 }
 
-static bool DMIsDirectory(const char *dir_name)
-{
+static bool DMIsDirectory( const char* dir_name ) {
 #ifdef WIN32
-    int ret = GetFileAttributesA(dir_name);
+    int ret = GetFileAttributesA( dir_name );
 
-    if (ret == -1)
-    {
+    if ( ret == -1 ) {
         return false;
     }
 
-    return !!(FILE_ATTRIBUTE_DIRECTORY & ret);
+    return !!( FILE_ATTRIBUTE_DIRECTORY & ret );
 #else
     struct stat fileStat;
-    int ret = stat(dir_name, &fileStat);
+    int ret = stat( dir_name, &fileStat );
 
-    if (ret == 0)
-    {
-        return S_ISDIR(fileStat.st_mode);
+    if ( ret == 0 ) {
+        return S_ISDIR( fileStat.st_mode );
     }
 
     return false;
 #endif
 }
 
-static inline bool DMCreateDirectory(const char *dir_name)
-{
+static inline bool DMCreateDirectory(const char* dir_name) {
 #ifdef WIN32
     int ret = mkdir(dir_name);
 #else
     int ret = mkdir(dir_name, S_IRWXU | S_IRWXG | S_IXOTH);
 #endif
 
-    if (0 != ret)
-    {
+    if (0 != ret) {
         return false;
     }
 
     return true;
 }
 
-static inline bool DMCreateDirectories(const char *dir_name)
-{
-    if (access(dir_name, 0) == 0)
-    {
-        if (DMIsDirectory(dir_name))
-        {
+static inline bool DMCreateDirectories(const char* dir_name) {
+    if (access(dir_name, 0) == 0) {
+        if (DMIsDirectory(dir_name)) {
             return true;
         }
 
@@ -225,12 +136,11 @@ static inline bool DMCreateDirectories(const char *dir_name)
     }
 
     char path[MAX_PATH];
-    SafeStrCopy(path, dir_name);
+    strncpy(path, dir_name, sizeof(path));
 
-    char *p = strrchr(path, PATH_DELIMITER);
+    char* p = strrchr(path, PATH_DELIMITER);
 
-    if (NULL == p)
-    {
+    if (NULL == p) {
         return DMCreateDirectory(path);
     }
 
@@ -239,208 +149,215 @@ static inline bool DMCreateDirectories(const char *dir_name)
     return DMCreateDirectory(dir_name);
 }
 
-static std::string DMGetRootPath()
-{
+static std::string DMGetRootPath() {
+    std::mutex lock;
 #ifdef WIN32
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
+    if ( first_time ) {
         first_time = false;
-        GetModuleFileNameA(0, path, sizeof(path));
-        char *p = strrchr(path, '\\');
-        *(p) = '\0';
-    }
+        GetModuleFileNameA( 0, path, sizeof( path ) );
+        char* p = strrchr( path, '\\' );
+        *( p ) = '\0';
+    };
 
     return path;
 #elif __APPLE__
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
-        uint32_t size = sizeof(path);
-        int nRet = _NSGetExecutablePath(path, &size);
+    if ( first_time ) {
+        first_time = false;
+        uint32_t size = sizeof( path );
+        int nRet = _NSGetExecutablePath( path, &size );
 
-        if (nRet != 0)
-        {
+        if ( nRet != 0 ) {
             return "./";
         }
 
-        char *p = strrchr(path, '/');
-        *(p) = '\0';
-    }
-
+        char* p = strrchr( path, '/' );
+        *( p ) = '\0';
+    };
     return path;
 #else
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
+    if ( first_time ) {
         first_time = false;
-        int nRet = readlink("/proc/self/exe", path, MAX_PATH);
+        int nRet = readlink( "/proc/self/exe", path, MAX_PATH );
 
-        if (nRet < 0 || nRet >= MAX_PATH)
-        {
+        if ( nRet < 0 || nRet >= MAX_PATH ) {
             return "./";
         }
 
-        char *p = strrchr(path, '/');
-        *(p) = '\0';
-    }
+        char* p = strrchr( path, '/' );
+        *( p ) = '\0';
+    };
 
     return path;
 #endif
 }
 
-static std::string DMGetExePath()
-{
+static std::string DMGetExePath() {
+    std::mutex lock;
 #ifdef WIN32
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
+    if ( first_time ) {
         first_time = false;
-        GetModuleFileNameA(0, path, sizeof(path));
-    }
+        GetModuleFileNameA( 0, path, sizeof( path ) );
+    };
 
     return path;
 #elif __APPLE__
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
-        uint32_t size = sizeof(path);
-        int nRet = _NSGetExecutablePath(path, &size);
+    if ( first_time ) {
+        first_time = false;
+        uint32_t size = sizeof( path );
+        int nRet = _NSGetExecutablePath( path, &size );
 
-        if (nRet != 0)
-        {
+        if ( nRet != 0 ) {
             return "./";
         }
-    }
-
+    };
     return path;
 #else
     static char path[MAX_PATH];
-    static bool first_time = true;
+    static std::atomic_bool first_time(true);
 
-    if (first_time)
-    {
+    if ( first_time ) {
         first_time = false;
-        int nRet = readlink("/proc/self/exe", path, MAX_PATH);
+        int nRet = readlink( "/proc/self/exe", path, MAX_PATH );
 
-        if (nRet < 0 || nRet >= MAX_PATH)
-        {
+        if ( nRet < 0 || nRet >= MAX_PATH ) {
             return "./";
         }
-    }
+    };
 
     return path;
 #endif
 }
-static const char *DMGetExeName()
-{
+
+static std::string DMGetExeName() {
+    std::mutex lock;
 #ifdef WIN32
     static char path[MAX_PATH];
-    static std::once_flag flag;
-    std::call_once(flag, []() {
+    static std::atomic_bool first_time(true);
+
+    if ( first_time ) {
+        first_time = false;
         char temp[MAX_PATH];
         GetModuleFileNameA(0, temp, sizeof(path));
 
-        char *point = strrchr(temp, '.');
+        char* point = strrchr(temp, '.');
 
-        if (NULL == point)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (NULL == point) {
+            strcpy(path, temp);
+            return path;
         }
 
         *point = '\0';
 
-        char *del = strrchr(temp, PATH_DELIMITER);
+        char* del = strrchr(temp, PATH_DELIMITER);
 
-        if (NULL == del)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (NULL == del) {
+            strcpy(path, temp);
+            return path;
         }
 
-        SafeStrCopy(path, del + 1);
-    });
+        strcpy(path, del + 1);
+    };
 
     return path;
 #elif __APPLE__
     static char path[MAX_PATH];
-    static std::once_flag flag;
-    std::call_once(flag, []() {
+    static std::atomic_bool first_time(true);
+
+    if ( first_time ) {
+        first_time = false;
         char temp[MAX_PATH];
         uint32_t size = sizeof(temp);
         int ret = _NSGetExecutablePath(temp, &size);
 
-        if (ret != 0)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (ret != 0) {
+            strcpy(path, temp);
+            return path;
         }
 
-        char *point = strrchr(temp, '.');
+        char* point = strrchr(temp, '.');
 
-        if (NULL == p)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (NULL == point) {
+            strcpy(path, temp);
+            return path;
         }
 
         *point = '\0';
 
-        char *del = strrchr(temp, PATH_DELIMITER)
+        char* del = strrchr(temp, PATH_DELIMITER);
 
-            if (NULL == del)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (NULL == del) {
+            strcpy(path, temp);
+            return path;
         }
 
-        SafeStrCopy(path, del + 1);
-    });
+        strcpy(path, del + 1);
+    };
     return path;
 #else
     static char path[MAX_PATH];
-    static std::once_flag flag;
-    std::call_once(flag, []() {
+    static std::atomic_bool first_time(true);
+
+    if ( first_time ) {
+        first_time = false;
         char temp[MAX_PATH];
         int ret = readlink("/proc/self/exe", temp, MAX_PATH);
 
-        if (ret < 0 || ret >= MAX_PATH)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (ret < 0 || ret >= MAX_PATH) {
+            strcpy(path, temp);
+            return path;
         }
         temp[ret] = '\0';
-        char *del = strrchr(temp, PATH_DELIMITER);
+        char* del = strrchr(temp, PATH_DELIMITER);
 
-        if (NULL == del)
-        {
-            SafeStrCopy(path, temp);
-            return;
+        if (NULL == del) {
+            strcpy(path, temp);
+            return path;
         }
 
-        SafeStrCopy(path, del + 1);
-    });
+        strcpy(path, del + 1);
+    };
 
     return path;
 #endif
 }
 
-static std::string DMGetWorkPath()
-{
+static std::string DMGetExeNameString() {
+    return DMGetExeName();
+}
+
+static std::string DMGetWorkPath() {
     char szPath[MAX_PATH];
     getcwd(szPath, sizeof(szPath));
     return szPath;
+}
+
+static void DMSetWorkPath() {
+#ifdef WIN32
+    std::string strPath = DMGetRootPath() + "\\..\\";
+    chdir(strPath.c_str());
+#else
+    std::string strPath = DMGetRootPath();
+    chdir(strPath.c_str());
+#endif
+}
+
+static void DMSetWorkPath(std::string& strPath) {
+    chdir(strPath.c_str());
 }
 
 // tolua_end
