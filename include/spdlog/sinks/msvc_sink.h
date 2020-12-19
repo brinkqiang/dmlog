@@ -6,11 +6,11 @@
 #ifndef __MSVC_SINK_H__
 #define __MSVC_SINK_H__
 
+#ifdef _WIN32
+
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
 #endif
-
-#if defined(_WIN32)
 
 #include "spdlog/details/null_mutex.h"
 #include "spdlog/sinks/base_sink.h"

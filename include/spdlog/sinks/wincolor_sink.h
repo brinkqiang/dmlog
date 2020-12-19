@@ -6,6 +6,8 @@
 #ifndef __WINCOLOR_SINK_H__
 #define __WINCOLOR_SINK_H__
 
+#ifdef _WIN32
+
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
 #endif
@@ -143,4 +145,5 @@ using wincolor_stderr_sink_st = wincolor_sink<details::console_stderr, details::
 } // namespace sinks
 } // namespace spdlog
 
+#endif
 #endif // __WINCOLOR_SINK_H__

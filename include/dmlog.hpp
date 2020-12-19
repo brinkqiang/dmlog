@@ -17510,6 +17510,8 @@ inline std::shared_ptr<spdlog::logger> spdlog::logger::clone(std::string logger_
 #ifndef __WINCOLOR_SINK_H__
 #define __WINCOLOR_SINK_H__
 
+#ifdef _WIN32
+
 #ifndef SPDLOG_H
 
 /*** Start of inlined file: spdlog.h ***/
@@ -18110,6 +18112,7 @@ using wincolor_stderr_sink_st = wincolor_sink<details::console_stderr, details::
 } // namespace sinks
 } // namespace spdlog
 
+#endif
 #endif // __WINCOLOR_SINK_H__
 
 /*** End of inlined file: wincolor_sink.h ***/
