@@ -34,10 +34,8 @@
 #include "dmutil.h"
 #include "dmformat.h"
 #include "dmtime.h"
-#include "spdlog/spdlog.h"
-#include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-
+#include "spdlog/sinks/daily_file_sink.h"
 
 #define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->critical(__VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->error(__VA_ARGS__)
