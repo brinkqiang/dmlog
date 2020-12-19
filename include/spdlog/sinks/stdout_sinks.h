@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __STDOUT_SINKS_H__
+#define __STDOUT_SINKS_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -100,3 +101,5 @@ inline std::shared_ptr<logger> stderr_logger_st(const std::string &logger_name)
     return Factory::template create<sinks::stderr_sink_st>(logger_name);
 }
 } // namespace spdlog
+
+#endif // __STDOUT_SINKS_H__

@@ -4,7 +4,8 @@
 //
 
 // cirucal q view of std::vector.
-#pragma once
+#ifndef __CIRCULAR_Q_H__
+#define __CIRCULAR_Q_H__
 
 #include <vector>
 
@@ -70,3 +71,5 @@ private:
 };
 } // namespace details
 } // namespace spdlog
+
+#endif // __CIRCULAR_Q_H__

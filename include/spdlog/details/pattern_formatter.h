@@ -2,8 +2,8 @@
 // Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
-
-#pragma once
+#ifndef __PATTERN_FORMATTER_H__
+#define __PATTERN_FORMATTER_H__
 
 #include "spdlog/details/fmt_helper.h"
 #include "spdlog/details/log_msg.h"
@@ -1334,3 +1334,5 @@ private:
     }
 };
 } // namespace spdlog
+
+#endif // __PATTERN_FORMATTER_H__

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __MPMC_BLOCKING_Q_H__
+#define __MPMC_BLOCKING_Q_H__
 
 //
 // Copyright(c) 2018 Gabi Melman.
@@ -119,3 +120,5 @@ private:
 };
 } // namespace details
 } // namespace spdlog
+
+#endif // __MPMC_BLOCKING_Q_H__

@@ -3,7 +3,9 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __REGISTRY_H__
+#define __REGISTRY_H__
+
 
 // Loggers registy of unique name->logger pointer
 // An attempt to create a logger with an already existing name will be ignored
@@ -283,3 +285,5 @@ private:
 
 } // namespace details
 } // namespace spdlog
+
+#endif // __REGISTRY_H__

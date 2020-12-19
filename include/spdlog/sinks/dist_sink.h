@@ -2,8 +2,8 @@
 // Copyright (c) 2015 David Schury, Gabi Melman
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
-
-#pragma once
+#ifndef __DIST_SINK_H__
+#define __DIST_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -92,3 +92,5 @@ using dist_sink_st = dist_sink<details::null_mutex>;
 
 } // namespace sinks
 } // namespace spdlog
+
+#endif // __DIST_SINK_H__

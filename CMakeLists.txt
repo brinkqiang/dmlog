@@ -19,5 +19,5 @@ MESSAGE(STATUS "VERSION: ${DMLOG_VERSION}")
 
 ADD_DEFINITIONS(-DUSE_DMLOG)
 
-ModuleImport("dmformat" "thirdparty/dmformat")
+#ModuleImport("dmformat" "thirdparty/dmformat")
 ExeImport("test" "")

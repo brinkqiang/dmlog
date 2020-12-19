@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ASYNC_LOGGER_IMPL_H__
+#define __ASYNC_LOGGER_IMPL_H__
 
 // async logger implementation
 // uses a thread pool to perform the actual logging
@@ -108,3 +109,5 @@ inline std::shared_ptr<spdlog::logger> spdlog::async_logger::clone(std::string n
     cloned->set_error_handler(this->error_handler());
     return std::move(cloned);
 }
+
+#endif // __ASYNC_LOGGER_IMPL_H__

@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __SYSLOG_SINK_H__
+#define __SYSLOG_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -92,3 +93,5 @@ inline std::shared_ptr<logger> syslog_logger_st(
     return Factory::template create<sinks::syslog_sink_st>(logger_name, syslog_ident, syslog_option, syslog_facility);
 }
 } // namespace spdlog
+
+#endif // __SYSLOG_SINK_H__

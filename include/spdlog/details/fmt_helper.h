@@ -2,7 +2,8 @@
 // Created by gabi on 6/15/18.
 //
 
-#pragma once
+#ifndef __FMT_HELPER_H__
+#define __FMT_HELPER_H__
 
 #include <chrono>
 #include <type_traits>
@@ -120,3 +121,5 @@ inline ToDuration time_fraction(const log_clock::time_point &tp)
 } // namespace fmt_helper
 } // namespace details
 } // namespace spdlog
+
+#endif // __FMT_HELPER_H__

@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __FORMATTER_H__
+#define __FORMATTER_H__
 
 #include "dmformat.h"
 #include "spdlog/details/log_msg.h"
@@ -18,3 +19,5 @@ public:
     virtual std::unique_ptr<formatter> clone() const = 0;
 };
 } // namespace spdlog
+
+#endif // __FORMATTER_H__

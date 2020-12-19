@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ANDROID_SINK_H__
+#define __ANDROID_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -119,3 +120,5 @@ inline std::shared_ptr<logger> android_logger_st(const std::string &logger_name,
 }
 
 } // namespace spdlog
+
+#endif // __ANDROID_SINK_H__

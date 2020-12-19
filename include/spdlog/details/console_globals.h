@@ -1,4 +1,7 @@
-#pragma once
+
+#ifndef __CONSOLE_GLOBALS_H__
+#define __CONSOLE_GLOBALS_H__
+
 //
 // Copyright(c) 2018 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
@@ -72,3 +75,5 @@ struct console_nullmutex
 };
 } // namespace details
 } // namespace spdlog
+
+#endif // __CONSOLE_GLOBALS_H__

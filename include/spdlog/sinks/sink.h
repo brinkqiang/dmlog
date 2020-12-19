@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __SINK_H__
+#define __SINK_H__
 
 #include "spdlog/details/log_msg.h"
 #include "spdlog/details/pattern_formatter.h"
@@ -57,3 +58,5 @@ protected:
 
 } // namespace sinks
 } // namespace spdlog
+
+#endif // __SINK_H__

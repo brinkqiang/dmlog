@@ -4,7 +4,9 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __PERIODIC_WORKER_H__
+#define __PERIODIC_WORKER_H__
+
 
 // periodic worker thread - periodically executes the given callback function.
 //
@@ -69,3 +71,5 @@ private:
 };
 } // namespace details
 } // namespace spdlog
+
+#endif // __PERIODIC_WORKER_H__

@@ -3,8 +3,10 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ROTATING_FILE_SINK_H__
+#define __ROTATING_FILE_SINK_H__
 
+#ifndef SPDLOG_H
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
 #endif
@@ -153,3 +155,5 @@ inline std::shared_ptr<logger> rotating_logger_st(
     return Factory::template create<sinks::rotating_file_sink_st>(logger_name, filename, max_file_size, max_files);
 }
 } // namespace spdlog
+
+#endif // __ROTATING_FILE_SINK_H__

@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ANSICOLOR_SINK_H__
+#define __ANSICOLOR_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -159,3 +160,5 @@ using ansicolor_stderr_sink_st = ansicolor_sink<details::console_stderr, details
 } // namespace sinks
 
 } // namespace spdlog
+
+#endif // __ANSICOLOR_SINK_H__

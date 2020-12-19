@@ -4,7 +4,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ASYNC_H__
+#define __ASYNC_H__
 
 //
 // Async logging using global thread pool
@@ -85,3 +86,6 @@ inline std::shared_ptr<spdlog::details::thread_pool> thread_pool()
     return details::registry::instance().get_tp();
 }
 } // namespace spdlog
+
+
+#endif // __ASYNC_H__

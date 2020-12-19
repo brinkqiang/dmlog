@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __WINCOLOR_SINK_H__
+#define __WINCOLOR_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -141,3 +142,5 @@ using wincolor_stderr_sink_st = wincolor_sink<details::console_stderr, details::
 
 } // namespace sinks
 } // namespace spdlog
+
+#endif // __WINCOLOR_SINK_H__

@@ -3,7 +3,9 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __TWEAKME_H__
+#define __TWEAKME_H__
+
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -143,3 +145,5 @@
 //
 // #define SPDLOG_FUNCTION __PRETTY_FUNCTION__
 ///////////////////////////////////////////////////////////////////////////////
+
+#endif // __TWEAKME_H__

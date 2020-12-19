@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __BASIC_FILE_SINK_H__
+#define __BASIC_FILE_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -68,3 +69,5 @@ inline std::shared_ptr<logger> basic_logger_st(const std::string &logger_name, c
 }
 
 } // namespace spdlog
+
+#endif // __BASIC_FILE_SINK_H__

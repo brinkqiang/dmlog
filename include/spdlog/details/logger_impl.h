@@ -3,7 +3,9 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __LOGGER_IMPL_H__
+#define __LOGGER_IMPL_H__
+
 
 #include "spdlog/details/fmt_helper.h"
 
@@ -439,3 +441,5 @@ inline std::shared_ptr<spdlog::logger> spdlog::logger::clone(std::string logger_
     cloned->set_error_handler(this->error_handler());
     return cloned;
 }
+
+#endif // __LOGGER_IMPL_H__

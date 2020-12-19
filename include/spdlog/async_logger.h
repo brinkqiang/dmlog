@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __ASYNC_LOGGER_H__
+#define __ASYNC_LOGGER_H__
 
 // Very fast asynchronous logger (millions of logs per second on an average
 // desktop)
@@ -71,3 +72,5 @@ private:
 } // namespace spdlog
 
 #include "details/async_logger_impl.h"
+
+#endif // __ASYNC_LOGGER_H__

@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __MSVC_SINK_H__
+#define __MSVC_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -52,3 +53,5 @@ using windebug_sink_st = msvc_sink_st;
 } // namespace spdlog
 
 #endif
+
+#endif // __MSVC_SINK_H__

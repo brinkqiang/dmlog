@@ -1,4 +1,5 @@
-#pragma once
+#ifndef __THREAD_POOL_H__
+#define __THREAD_POOL_H__
 
 #include "spdlog/details/fmt_helper.h"
 #include "spdlog/details/log_msg.h"
@@ -236,3 +237,5 @@ private:
 
 } // namespace details
 } // namespace spdlog
+
+#endif // __THREAD_POOL_H__

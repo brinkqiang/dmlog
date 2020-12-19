@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __LOGGER_H__
+#define __LOGGER_H__
 
 // Thread safe logger (except for set_pattern(..), set_formatter(..) and
 // set_error_handler())
@@ -186,3 +187,5 @@ protected:
 } // namespace spdlog
 
 #include "details/logger_impl.h"
+
+#endif // __LOGGER_H__
