@@ -342,22 +342,20 @@ static std::string DMGetExeNameString() {
 
 static std::string DMGetWorkPath() {
     char szPath[MAX_PATH];
-    getcwd(szPath, sizeof(szPath));
-    return szPath;
+    return getcwd(szPath, sizeof(szPath));
 }
 
-static void DMSetWorkPath() {
-#ifdef WIN32
+static bool DMSetWorkPath(std::string& strPath) {
+    if (0 != chdir(strPath.c_str()))
+    {
+        return false;
+    }
+    return true;
+}
+
+static bool DMSetWorkPath() {
     std::string strPath = DMGetRootPath() + "\\..\\";
-    chdir(strPath.c_str());
-#else
-    std::string strPath = DMGetRootPath();
-    chdir(strPath.c_str());
-#endif
-}
-
-static void DMSetWorkPath(std::string& strPath) {
-    chdir(strPath.c_str());
+    return DMSetWorkPath(strPath);
 }
 
 // tolua_end
