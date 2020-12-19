@@ -1,7 +1,7 @@
 
 pushd include
 
-dmheader -i . -i ../thirdparty/dmformat/include dmlog.h ../single/dmlog.hpp
+dmheader -i . -i ../thirdparty/dmformat/include dmlog.h dmlog.hpp
 
 popd
 
