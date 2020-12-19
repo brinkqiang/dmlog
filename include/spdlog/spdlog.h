@@ -7,7 +7,6 @@
 
 #ifndef SPDLOG_H
 #define SPDLOG_H
-#pragma once
 
 #include "spdlog/common.h"
 #include "spdlog/details/registry.h"

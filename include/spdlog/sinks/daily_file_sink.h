@@ -3,7 +3,8 @@
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __DAILY_FILE_SINK_H__
+#define __DAILY_FILE_SINK_H__
 
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
@@ -134,3 +135,5 @@ inline std::shared_ptr<logger> daily_logger_st(
     return Factory::template create<sinks::daily_file_sink_st>(logger_name, filename, hour, minute, truncate);
 }
 } // namespace spdlog
+
+#endif // __DAILY_FILE_SINK_H__

@@ -7501,7 +7501,6 @@ FMT_END_NAMESPACE
 
 #ifndef SPDLOG_H
 #define SPDLOG_H
-#pragma once
 
 
 /*** Start of inlined file: common.h ***/
@@ -17524,7 +17523,6 @@ inline std::shared_ptr<spdlog::logger> spdlog::logger::clone(std::string logger_
 
 #ifndef SPDLOG_H
 #define SPDLOG_H
-#pragma once
 
 
 /*** Start of inlined file: version.h ***/
@@ -18912,7 +18910,8 @@ inline void critical(const wchar_t *fmt, const Args &... args)
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
 
-#pragma once
+#ifndef __DAILY_FILE_SINK_H__
+#define __DAILY_FILE_SINK_H__
 
 #ifndef SPDLOG_H
 
@@ -19268,6 +19267,8 @@ inline std::shared_ptr<logger> daily_logger_st(
 	return Factory::template create<sinks::daily_file_sink_st>(logger_name, filename, hour, minute, truncate);
 }
 } // namespace spdlog
+
+#endif // __DAILY_FILE_SINK_H__
 
 /*** End of inlined file: daily_file_sink.h ***/
 
