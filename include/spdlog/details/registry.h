@@ -18,10 +18,10 @@
 
 #ifndef SPDLOG_DISABLE_DEFAULT_LOGGER
 // support for the default stdout color logger
-#ifdef _WIN32
-#include "spdlog/sinks/wincolor_sink.h"
-#else
+#ifndef _WIN32
 #include "spdlog/sinks/ansicolor_sink.h"
+#else
+#include "spdlog/sinks/wincolor_sink.h"
 #endif
 #endif // SPDLOG_DISABLE_DEFAULT_LOGGER
 
