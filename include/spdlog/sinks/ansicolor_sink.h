@@ -6,6 +6,7 @@
 #ifndef __ANSICOLOR_SINK_H__
 #define __ANSICOLOR_SINK_H__
 
+#ifndef _WIN32
 #ifndef SPDLOG_H
 #include "spdlog/spdlog.h"
 #endif
@@ -161,4 +162,5 @@ using ansicolor_stderr_sink_st = ansicolor_sink<details::console_stderr, details
 
 } // namespace spdlog
 
+#endif
 #endif // __ANSICOLOR_SINK_H__
