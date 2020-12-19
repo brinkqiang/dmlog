@@ -16,8 +16,14 @@
 #include "spdlog/details/periodic_worker.h"
 #include "spdlog/logger.h"
 
-#include "spdlog/sinks/ansicolor_sink.h"
+#ifndef SPDLOG_DISABLE_DEFAULT_LOGGER
+#include "spdlog/details/console_globals.h"
+#ifdef _WIN32
 #include "spdlog/sinks/wincolor_sink.h"
+#else
+#include "spdlog/sinks/ansicolor_sink.h"
+#endif
+#endif // SPDLOG_DISABLE_DEFAULT_LOGGER
 
 #include <chrono>
 #include <functional>
