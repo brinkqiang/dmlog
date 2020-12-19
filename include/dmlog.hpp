@@ -19286,11 +19286,13 @@ inline std::shared_ptr<logger> daily_logger_st(
 
 #endif
 
+#ifndef SPDLOG_DISABLE_DEFAULT_LOGGER
 #ifdef _WIN32
 
 #else
 
 #endif
+#endif // SPDLOG_DISABLE_DEFAULT_LOGGER
 
 namespace spdlog {
 namespace sinks {

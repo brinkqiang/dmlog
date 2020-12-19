@@ -10,11 +10,13 @@
 #include "spdlog/spdlog.h"
 #endif
 
+#ifndef SPDLOG_DISABLE_DEFAULT_LOGGER
 #ifdef _WIN32
 #include "spdlog/sinks/wincolor_sink.h"
 #else
 #include "spdlog/sinks/ansicolor_sink.h"
 #endif
+#endif // SPDLOG_DISABLE_DEFAULT_LOGGER
 
 namespace spdlog {
 namespace sinks {
