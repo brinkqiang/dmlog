@@ -23,8 +23,7 @@
 #define __DMTYPES_H_INCLUDE__
 
 #ifdef _MSC_VER
-#include "msinttypes/stdint.h"
-#include "msinttypes/inttypes.h"
+#include <stdint.h>
 #else
 // Other compilers should have this.
 #include <stdint.h>
