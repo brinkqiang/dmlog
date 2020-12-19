@@ -1,5 +1,5 @@
-#include "dmlog.h"
-#include "dmutil.h"
+#include "dmlog.hpp"
+
 int main(int argc, char *argv[])
 {
     DMBench oBench;
