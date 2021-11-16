@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < 2000000; i++) {
         oBench++;
-        LOG_WARN("This message is 116 characters long including the info that comes before it. {}", i);
+        LOG_INFO("This message is 116 characters long including the info that comes before it. {}", i);
     }
 
     LOG_CRITICAL("This concludes the feature demo for dmlog!");

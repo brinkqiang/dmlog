@@ -64,7 +64,7 @@ public:
         daily_logger->set_level(spdlog::level::trace);
         daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
         spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
-        logger.set_level(spdlog::level::trace);
+        logger.set_level(spdlog::level::warn);
         my_logger = logger.clone(DMGetExeName());
 
         my_logger->flush_on(spdlog::level::warn);
