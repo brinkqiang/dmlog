@@ -56,7 +56,7 @@ public:
         DMCreateDirectories((DMGetRootPath() + "/logs").c_str());
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
-        console_sink->set_level(spdlog::level::trace);
+        console_sink->set_level(spdlog::level::warn);
         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
         auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile,
@@ -64,7 +64,7 @@ public:
         daily_logger->set_level(spdlog::level::trace);
         daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
         spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
-        logger.set_level(spdlog::level::warn);
+        logger.set_level(spdlog::level::trace);
         my_logger = logger.clone(DMGetExeName());
 
         my_logger->flush_on(spdlog::level::warn);
