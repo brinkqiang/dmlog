@@ -113,7 +113,7 @@ struct DMBench : public DMLogTimer
     {
         stop();
     }
-    void stop()
+    inline void stop()
     {
         auto dur = std::chrono::system_clock::now() - tp;
         LOG_DEBUG("Per op: {} ns",
