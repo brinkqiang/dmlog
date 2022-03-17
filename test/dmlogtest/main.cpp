@@ -1,4 +1,4 @@
-#include "dmlog.h"
+#include "dmlog.hpp"
 #include "dmutil.h"
 int main(int argc, char *argv[])
 {
