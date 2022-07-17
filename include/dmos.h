@@ -29,7 +29,11 @@
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN 1
+#endif
+
+#ifndef NOMINMAX
+#define NOMINMAX
 #endif
 
 #ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
@@ -40,8 +44,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
-#ifndef _CRT_SECURE_NO_WARNINGS
-#define _CRT_SECURE_NO_WARNINGS
+#ifndef _SCL_SECURE_NO_WARNINGS
+#define _SCL_SECURE_NO_WARNINGS
 #endif
 
 #pragma warning (disable: 4996)
