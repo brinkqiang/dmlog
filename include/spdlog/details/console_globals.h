@@ -1,3 +1,7 @@
+
+#ifndef __CONSOLE_GLOBALS_H__
+#define __CONSOLE_GLOBALS_H__
+
 #pragma once
 //
 // Copyright(c) 2018 Gabi Melman.
@@ -22,53 +26,55 @@
 #endif
 
 namespace spdlog {
-namespace details {
-struct console_stdout
-{
-    static std::FILE *stream()
-    {
-        return stdout;
-    }
+    namespace details {
+        struct console_stdout
+        {
+            static std::FILE* stream()
+            {
+                return stdout;
+            }
 #ifdef _WIN32
-    static HANDLE handle()
-    {
-        return ::GetStdHandle(STD_OUTPUT_HANDLE);
-    }
+            static HANDLE handle()
+            {
+                return ::GetStdHandle(STD_OUTPUT_HANDLE);
+            }
 #endif
-};
+        };
 
-struct console_stderr
-{
-    static std::FILE *stream()
-    {
-        return stderr;
-    }
+        struct console_stderr
+        {
+            static std::FILE* stream()
+            {
+                return stderr;
+            }
 #ifdef _WIN32
-    static HANDLE handle()
-    {
-        return ::GetStdHandle(STD_ERROR_HANDLE);
-    }
+            static HANDLE handle()
+            {
+                return ::GetStdHandle(STD_ERROR_HANDLE);
+            }
 #endif
-};
+        };
 
-struct console_mutex
-{
-    using mutex_t = std::mutex;
-    static mutex_t &mutex()
-    {
-        static mutex_t s_mutex;
-        return s_mutex;
-    }
-};
+        struct console_mutex
+        {
+            using mutex_t = std::mutex;
+            static mutex_t& mutex()
+            {
+                static mutex_t s_mutex;
+                return s_mutex;
+            }
+        };
 
-struct console_nullmutex
-{
-    using mutex_t = null_mutex;
-    static mutex_t &mutex()
-    {
-        static mutex_t s_mutex;
-        return s_mutex;
-    }
-};
-} // namespace details
+        struct console_nullmutex
+        {
+            using mutex_t = null_mutex;
+            static mutex_t& mutex()
+            {
+                static mutex_t s_mutex;
+                return s_mutex;
+            }
+        };
+    } // namespace details
 } // namespace spdlog
+
+#endif // __CONSOLE_GLOBALS_H__

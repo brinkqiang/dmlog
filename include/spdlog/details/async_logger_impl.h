@@ -2,6 +2,8 @@
 // Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+#ifndef __ASYNC_LOGGER_IMPL_H__
+#define __ASYNC_LOGGER_IMPL_H__
 
 #pragma once
 
@@ -31,12 +33,12 @@ inline spdlog::async_logger::async_logger(
 
 inline spdlog::async_logger::async_logger(
     std::string logger_name, sink_ptr single_sink, std::weak_ptr<details::thread_pool> tp, async_overflow_policy overflow_policy)
-    : async_logger(std::move(logger_name), {std::move(single_sink)}, std::move(tp), overflow_policy)
+    : async_logger(std::move(logger_name), { std::move(single_sink) }, std::move(tp), overflow_policy)
 {
 }
 
 // send the log message to the thread pool
-inline void spdlog::async_logger::sink_it_(details::log_msg &msg)
+inline void spdlog::async_logger::sink_it_(details::log_msg& msg)
 {
 #if defined(SPDLOG_ENABLE_MESSAGE_COUNTER)
     incr_msg_counter_(msg);
@@ -67,11 +69,11 @@ inline void spdlog::async_logger::flush_()
 //
 // backend functions - called from the thread pool to do the actual job
 //
-inline void spdlog::async_logger::backend_log_(const details::log_msg &incoming_log_msg)
+inline void spdlog::async_logger::backend_log_(const details::log_msg& incoming_log_msg)
 {
     try
     {
-        for (auto &s : sinks_)
+        for (auto& s : sinks_)
         {
             if (s->should_log(incoming_log_msg.level))
             {
@@ -81,17 +83,17 @@ inline void spdlog::async_logger::backend_log_(const details::log_msg &incoming_
     }
     SPDLOG_CATCH_AND_HANDLE
 
-    if (should_flush_(incoming_log_msg))
-    {
-        backend_flush_();
-    }
+        if (should_flush_(incoming_log_msg))
+        {
+            backend_flush_();
+        }
 }
 
 inline void spdlog::async_logger::backend_flush_()
 {
     try
     {
-        for (auto &sink : sinks_)
+        for (auto& sink : sinks_)
         {
             sink->flush();
         }
@@ -108,3 +110,5 @@ inline std::shared_ptr<spdlog::logger> spdlog::async_logger::clone(std::string n
     cloned->set_error_handler(this->error_handler());
     return std::move(cloned);
 }
+
+#endif // __ASYNC_LOGGER_IMPL_H__

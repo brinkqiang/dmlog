@@ -3,6 +3,8 @@
 // Copyright(c) 2018 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+#ifndef __PERIODIC_WORKER_H__
+#define __PERIODIC_WORKER_H__
 
 #pragma once
 
@@ -18,54 +20,56 @@
 #include <mutex>
 #include <thread>
 namespace spdlog {
-namespace details {
+    namespace details {
 
-class periodic_worker
-{
-public:
-    periodic_worker(const std::function<void()> &callback_fun, std::chrono::seconds interval)
-    {
-        active_ = (interval > std::chrono::seconds::zero());
-        if (!active_)
+        class periodic_worker
         {
-            return;
-        }
-
-        worker_thread_ = std::thread([this, callback_fun, interval]() {
-            for (;;)
+        public:
+            periodic_worker(const std::function<void()>& callback_fun, std::chrono::seconds interval)
             {
-                std::unique_lock<std::mutex> lock(this->mutex_);
-                if (this->cv_.wait_for(lock, interval, [this] { return !this->active_; }))
+                active_ = (interval > std::chrono::seconds::zero());
+                if (!active_)
                 {
-                    return; // active_ == false, so exit this thread
+                    return;
                 }
-                callback_fun();
+
+                worker_thread_ = std::thread([this, callback_fun, interval]() {
+                    for (;;)
+                    {
+                        std::unique_lock<std::mutex> lock(this->mutex_);
+                        if (this->cv_.wait_for(lock, interval, [this] { return !this->active_; }))
+                        {
+                            return; // active_ == false, so exit this thread
+                        }
+                        callback_fun();
+                    }
+                });
             }
-        });
-    }
 
-    periodic_worker(const periodic_worker &) = delete;
-    periodic_worker &operator=(const periodic_worker &) = delete;
+            periodic_worker(const periodic_worker&) = delete;
+            periodic_worker& operator=(const periodic_worker&) = delete;
 
-    // stop the worker thread and join it
-    ~periodic_worker()
-    {
-        if (worker_thread_.joinable())
-        {
+            // stop the worker thread and join it
+            ~periodic_worker()
             {
-                std::lock_guard<std::mutex> lock(mutex_);
-                active_ = false;
+                if (worker_thread_.joinable())
+                {
+                    {
+                        std::lock_guard<std::mutex> lock(mutex_);
+                        active_ = false;
+                    }
+                    cv_.notify_one();
+                    worker_thread_.join();
+                }
             }
-            cv_.notify_one();
-            worker_thread_.join();
-        }
-    }
 
-private:
-    bool active_;
-    std::thread worker_thread_;
-    std::mutex mutex_;
-    std::condition_variable cv_;
-};
-} // namespace details
+        private:
+            bool active_;
+            std::thread worker_thread_;
+            std::mutex mutex_;
+            std::condition_variable cv_;
+        };
+    } // namespace details
 } // namespace spdlog
+
+#endif // __PERIODIC_WORKER_H__

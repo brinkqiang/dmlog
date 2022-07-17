@@ -2,6 +2,8 @@
 // Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+#ifndef __COMMON_H__
+#define __COMMON_H__
 
 #pragma once
 
@@ -241,3 +243,5 @@ std::unique_ptr<T> make_unique(Args &&... args)
 #endif
 } // namespace details
 } // namespace spdlog
+
+#endif // __COMMON_H__

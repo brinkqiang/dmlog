@@ -2,6 +2,8 @@
 // Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+#ifndef __TWEAKME_H__
+#define __TWEAKME_H__
 
 #pragma once
 
@@ -143,3 +145,4 @@
 //
 // #define SPDLOG_FUNCTION __PRETTY_FUNCTION__
 ///////////////////////////////////////////////////////////////////////////////
+#endif // __TWEAKME_H__

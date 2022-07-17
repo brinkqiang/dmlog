@@ -2,6 +2,8 @@
 // Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+#ifndef __ASYNC_LOGGER_H__
+#define __ASYNC_LOGGER_H__
 
 #pragma once
 
@@ -71,3 +73,5 @@ private:
 } // namespace spdlog
 
 #include "details/async_logger_impl.h"
+
+#endif // __ASYNC_LOGGER_H__
