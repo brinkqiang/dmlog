@@ -1,6 +1,6 @@
-#include "dmlog.hpp"
+#include "dmlog.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     DMBench oBench;
     LOG_CRITICAL("hello world {}.", 2019);
