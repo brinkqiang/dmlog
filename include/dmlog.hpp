@@ -80,7 +80,7 @@
 #ifndef __DMOS_H_INCLUDE__
 #define __DMOS_H_INCLUDE__
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
@@ -90,9 +90,20 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
+
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#pragma warning (disable: 4996)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -129,7 +140,7 @@ namespace stdext {
 }
 
 namespace std {
-using namespace stdext;
+	using namespace stdext;
 }
 
 #define VSNPRINTF _vsnprintf
@@ -186,20 +197,20 @@ using namespace stdext;
 
 #define PATH_IS_DELIMITER(x)  ('\\' == x || '/' == x)
 
-#ifdef WIN32
+#ifdef _WIN32
 #define PATH_DELIMITER '\\'
 #else
 #define PATH_DELIMITER '/'
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #define PATH_DELIMITER_STR "\\"
 #else
 #define PATH_DELIMITER_STR "/"
 #endif
 #define DMASSERT assert
 
-#ifdef WIN32
+#ifdef _WIN32
 #define DMAPI __stdcall
 typedef HANDLE DMHANDLE;
 #define DMINVALID_HANDLE  NULL
@@ -222,7 +233,7 @@ typedef int DMHANDLE;
 
 // tolua_begin
 
-#ifdef WIN32
+#ifdef _WIN32
 static inline struct tm* localtime_r( const time_t* timep, struct tm* result ) {
 	localtime_s( result, timep );
 	return result;
@@ -281,7 +292,7 @@ static inline time_t DMFormatDateTime( const std::string& strTime,
 }
 
 static bool DMIsDirectory( const char* dir_name ) {
-#ifdef WIN32
+#ifdef _WIN32
 	int ret = GetFileAttributesA( dir_name );
 
 	if ( ret == -1 ) {
@@ -302,7 +313,7 @@ static bool DMIsDirectory( const char* dir_name ) {
 }
 
 static inline bool DMCreateDirectory(const char* dir_name) {
-#ifdef WIN32
+#ifdef _WIN32
 	int ret = mkdir(dir_name);
 #else
 	int ret = mkdir(dir_name, S_IRWXU | S_IRWXG | S_IXOTH);
@@ -340,7 +351,7 @@ static inline bool DMCreateDirectories(const char* dir_name) {
 
 static std::string DMGetRootPath() {
 	std::mutex lock;
-#ifdef WIN32
+#ifdef _WIN32
 	static char path[MAX_PATH];
 	static std::atomic_bool first_time(true);
 
@@ -391,7 +402,7 @@ static std::string DMGetRootPath() {
 
 static std::string DMGetExePath() {
 	std::mutex lock;
-#ifdef WIN32
+#ifdef _WIN32
 	static char path[MAX_PATH];
 	static std::atomic_bool first_time(true);
 
@@ -434,7 +445,7 @@ static std::string DMGetExePath() {
 
 static std::string DMGetExeName() {
 	std::mutex lock;
-#ifdef WIN32
+#ifdef _WIN32
 	static char path[MAX_PATH];
 	static std::atomic_bool first_time(true);
 
@@ -12598,7 +12609,7 @@ public:
 		console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
 		auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile,
-							2, 30);
+			2, 30);
 		daily_logger->set_level(spdlog::level::trace);
 		daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 		spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
@@ -12638,7 +12649,7 @@ struct DMLogTimer
 	{
 		auto dur = std::chrono::system_clock::now() - tp;
 		LOG_DEBUG("Cost {} ms", std::chrono::duration_cast<std::chrono::milliseconds>
-				  (dur).count());
+			(dur).count());
 	}
 	std::chrono::system_clock::time_point tp;
 };
@@ -12654,10 +12665,10 @@ struct DMBench : public DMLogTimer
 	{
 		auto dur = std::chrono::system_clock::now() - tp;
 		LOG_DEBUG("Per op: {} ns",
-				  std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(
-					  val, (uint64_t)1));
+			std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(
+				val, (uint64_t)1));
 		auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>
-					(dur).count() / 10;
+			(dur).count() / 10;
 
 		if (perf < 1)
 		{
@@ -12690,4 +12701,6 @@ struct DMBench : public DMLogTimer
 	}
 	uint64_t val;
 };
+
 #endif // __DMLOG_H__
+

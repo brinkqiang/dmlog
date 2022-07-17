@@ -22,7 +22,7 @@
 #ifndef __DMOS_H_INCLUDE__
 #define __DMOS_H_INCLUDE__
 
-#ifdef WIN32
+#ifdef _WIN32
 
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT 0x0501
@@ -32,9 +32,20 @@
 #define WIN32_LEAN_AND_MEAN
 #endif
 
+#ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
+#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#endif
+
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+
+#ifndef _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
+#pragma warning (disable: 4996)
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -72,7 +83,7 @@ namespace stdext {
 }
 
 namespace std {
-using namespace stdext;
+    using namespace stdext;
 }
 
 #define VSNPRINTF _vsnprintf
@@ -129,20 +140,20 @@ using namespace stdext;
 
 #define PATH_IS_DELIMITER(x)  ('\\' == x || '/' == x)
 
-#ifdef WIN32
+#ifdef _WIN32
 #define PATH_DELIMITER '\\'
 #else
 #define PATH_DELIMITER '/'
 #endif
 
-#ifdef WIN32
+#ifdef _WIN32
 #define PATH_DELIMITER_STR "\\"
 #else
 #define PATH_DELIMITER_STR "/"
 #endif
 #define DMASSERT assert
 
-#ifdef WIN32
+#ifdef _WIN32
 #define DMAPI __stdcall
 typedef HANDLE DMHANDLE;
 #define DMINVALID_HANDLE  NULL
