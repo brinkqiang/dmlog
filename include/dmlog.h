@@ -60,7 +60,7 @@ public:
         console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
 
         auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile,
-                            2, 30);
+            2, 30);
         daily_logger->set_level(spdlog::level::trace);
         daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
         spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
@@ -101,7 +101,7 @@ struct DMLogTimer
     {
         auto dur = std::chrono::system_clock::now() - tp;
         LOG_DEBUG("Cost {} ms", std::chrono::duration_cast<std::chrono::milliseconds>
-                  (dur).count());
+            (dur).count());
     }
     std::chrono::system_clock::time_point tp;
 };
@@ -117,10 +117,10 @@ struct DMBench : public DMLogTimer
     {
         auto dur = std::chrono::system_clock::now() - tp;
         LOG_DEBUG("Per op: {} ns",
-                  std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(
-                      val, (uint64_t)1));
+            std::chrono::duration_cast<std::chrono::nanoseconds>(dur).count() / std::max(
+                val, (uint64_t)1));
         auto perf = (double)val / std::chrono::duration_cast<std::chrono::milliseconds>
-                    (dur).count() / 10;
+            (dur).count() / 10;
 
         if (perf < 1)
         {
@@ -153,4 +153,7 @@ struct DMBench : public DMLogTimer
     }
     uint64_t val;
 };
+
+
+
 #endif // __DMLOG_H__
