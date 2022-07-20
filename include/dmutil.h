@@ -34,78 +34,78 @@
 // tolua_begin
 
 #ifdef _WIN32
-static inline struct tm* localtime_r( const time_t* timep, struct tm* result ) {
-    localtime_s( result, timep );
+static inline struct tm* localtime_r(const time_t* timep, struct tm* result) {
+    localtime_s(result, timep);
     return result;
 }
-static inline struct tm* gmtime_r( const time_t* timep, struct tm* result ) {
-    gmtime_s( result, timep );
+static inline struct tm* gmtime_r(const time_t* timep, struct tm* result) {
+    gmtime_s(result, timep);
     return result;
 }
 #endif
 
-static inline std::string DMFormatIP( unsigned int dwIP ) {
+static inline std::string DMFormatIP(unsigned int dwIP) {
     sockaddr_in s;
     s.sin_family = AF_INET;
     s.sin_addr.s_addr = dwIP;
-    return inet_ntoa( s.sin_addr );
+    return inet_ntoa(s.sin_addr);
 }
 
-static inline unsigned int DMFormatIP( const std::string& strIp ) {
-    return inet_addr( strIp.c_str() );
+static inline unsigned int DMFormatIP(const std::string& strIp) {
+    return inet_addr(strIp.c_str());
 }
 
-static inline unsigned short DMFormatPort( const std::string& strPort ) {
-    return htons( atoi( strPort.c_str() ) );
+static inline unsigned short DMFormatPort(const std::string& strPort) {
+    return htons(atoi(strPort.c_str()));
 }
 
-static inline unsigned short DMFormatPort( unsigned short wPort ) {
-    return htons( wPort );
+static inline unsigned short DMFormatPort(unsigned short wPort) {
+    return htons(wPort);
 }
 
-static inline std::string DMFormatDateTime( time_t tVal = time( 0 ),
-        const char* pFormat = "%Y-%m-%d %H:%M:%S" ) {
-    struct tm Tm = {0};
+static inline std::string DMFormatDateTime(time_t tVal = time(0),
+    const char* pFormat = "%Y-%m-%d %H:%M:%S") {
+    struct tm Tm = { 0 };
 
-    if ( localtime_r( &tVal, &Tm ) ) {
+    if (localtime_r(&tVal, &Tm)) {
         char szBuf[128];
-        strftime( szBuf, sizeof( szBuf ), pFormat, &Tm );
+        strftime(szBuf, sizeof(szBuf), pFormat, &Tm);
         return szBuf;
     }
 
     return "";
 }
 
-static inline time_t DMFormatDateTime( const std::string& strTime,
-                                       const char* pFormat =  "%d-%d-%d %d:%d:%d" ) {
+static inline time_t DMFormatDateTime(const std::string& strTime,
+    const char* pFormat = "%d-%d-%d %d:%d:%d") {
     time_t ret = 0;
-    struct tm tmMake = {0};
+    struct tm tmMake = { 0 };
 
-    if ( 6 == sscanf( strTime.c_str(), pFormat, &tmMake.tm_year, &tmMake.tm_mon,
-                      &tmMake.tm_mday, &tmMake.tm_hour, &tmMake.tm_min, &tmMake.tm_sec ) ) {
+    if (6 == sscanf(strTime.c_str(), pFormat, &tmMake.tm_year, &tmMake.tm_mon,
+        &tmMake.tm_mday, &tmMake.tm_hour, &tmMake.tm_min, &tmMake.tm_sec)) {
         tmMake.tm_year -= 1900;
         tmMake.tm_mon -= 1;
-        ret = mktime( &tmMake );
+        ret = mktime(&tmMake);
     }
 
     return ret;
 }
 
-static bool DMIsDirectory( const char* dir_name ) {
+static bool DMIsDirectory(const char* dir_name) {
 #ifdef _WIN32
-    int ret = GetFileAttributesA( dir_name );
+    int ret = GetFileAttributesA(dir_name);
 
-    if ( ret == -1 ) {
+    if (ret == -1) {
         return false;
     }
 
-    return !!( FILE_ATTRIBUTE_DIRECTORY & ret );
+    return !!(FILE_ATTRIBUTE_DIRECTORY & ret);
 #else
     struct stat fileStat;
-    int ret = stat( dir_name, &fileStat );
+    int ret = stat(dir_name, &fileStat);
 
-    if ( ret == 0 ) {
-        return S_ISDIR( fileStat.st_mode );
+    if (ret == 0) {
+        return S_ISDIR(fileStat.st_mode);
     }
 
     return false;
@@ -155,11 +155,11 @@ static std::string DMGetRootPath() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        GetModuleFileNameA( 0, path, sizeof( path ) );
-        char* p = strrchr( path, '\\' );
-        *( p ) = '\0';
+        GetModuleFileNameA(0, path, sizeof(path));
+        char* p = strrchr(path, '\\');
+        *(p) = '\0';
     };
 
     return path;
@@ -167,33 +167,33 @@ static std::string DMGetRootPath() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        uint32_t size = sizeof( path );
-        int nRet = _NSGetExecutablePath( path, &size );
+        uint32_t size = sizeof(path);
+        int nRet = _NSGetExecutablePath(path, &size);
 
-        if ( nRet != 0 ) {
+        if (nRet != 0) {
             return "./";
         }
 
-        char* p = strrchr( path, '/' );
-        *( p ) = '\0';
+        char* p = strrchr(path, '/');
+        *(p) = '\0';
     };
     return path;
 #else
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        int nRet = readlink( "/proc/self/exe", path, MAX_PATH );
+        int nRet = readlink("/proc/self/exe", path, MAX_PATH);
 
-        if ( nRet < 0 || nRet >= MAX_PATH ) {
+        if (nRet < 0 || nRet >= MAX_PATH) {
             return "./";
         }
 
-        char* p = strrchr( path, '/' );
-        *( p ) = '\0';
+        char* p = strrchr(path, '/');
+        *(p) = '\0';
     };
 
     return path;
@@ -206,9 +206,9 @@ static std::string DMGetExePath() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        GetModuleFileNameA( 0, path, sizeof( path ) );
+        GetModuleFileNameA(0, path, sizeof(path));
     };
 
     return path;
@@ -216,12 +216,12 @@ static std::string DMGetExePath() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        uint32_t size = sizeof( path );
-        int nRet = _NSGetExecutablePath( path, &size );
+        uint32_t size = sizeof(path);
+        int nRet = _NSGetExecutablePath(path, &size);
 
-        if ( nRet != 0 ) {
+        if (nRet != 0) {
             return "./";
         }
     };
@@ -230,11 +230,11 @@ static std::string DMGetExePath() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
-        int nRet = readlink( "/proc/self/exe", path, MAX_PATH );
+        int nRet = readlink("/proc/self/exe", path, MAX_PATH);
 
-        if ( nRet < 0 || nRet >= MAX_PATH ) {
+        if (nRet < 0 || nRet >= MAX_PATH) {
             return "./";
         }
     };
@@ -249,7 +249,7 @@ static std::string DMGetExeName() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
         char temp[MAX_PATH];
         GetModuleFileNameA(0, temp, sizeof(path));
@@ -278,7 +278,7 @@ static std::string DMGetExeName() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
         char temp[MAX_PATH];
         uint32_t size = sizeof(temp);
@@ -312,7 +312,7 @@ static std::string DMGetExeName() {
     static char path[MAX_PATH];
     static std::atomic_bool first_time(true);
 
-    if ( first_time ) {
+    if (first_time) {
         first_time = false;
         char temp[MAX_PATH];
         int ret = readlink("/proc/self/exe", temp, MAX_PATH);
