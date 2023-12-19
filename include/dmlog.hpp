@@ -12625,7 +12625,8 @@ public:
 		//rotating_logger->set_level(spdlog::level::trace);
 		//rotating_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%@][%t][%l] %v");
 
-		spdlog::logger logger(DMGetExeName(), {console_sink, daily_logger/*, rotating_logger*/});
+		//spdlog::logger logger(DMGetExeName(), {console_sink, daily_logger , rotating_logger});
+		spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger});
 
 		my_logger = logger.clone(DMGetExeName());
 
