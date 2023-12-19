@@ -7500,6 +7500,143 @@ FMT_END_NAMESPACE
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 
+/*** Start of inlined file: console_globals.h ***/
+#ifndef __CONSOLE_GLOBALS_H__
+#define __CONSOLE_GLOBALS_H__
+
+#pragma once
+//
+// Copyright(c) 2018 Gabi Melman.
+// Distributed under the MIT License (http://opensource.org/licenses/MIT)
+//
+
+
+/*** Start of inlined file: null_mutex.h ***/
+//
+// Copyright(c) 2015 Gabi Melman.
+// Distributed under the MIT License (http://opensource.org/licenses/MIT)
+//
+#ifndef __NULL_MUTEX_H__
+#define __NULL_MUTEX_H__
+
+#pragma once
+
+#include <atomic>
+// null, no cost dummy "mutex" and dummy "atomic" int
+
+namespace spdlog {
+	namespace details {
+		struct null_mutex
+		{
+			void lock() {}
+			void unlock() {}
+			bool try_lock()
+			{
+				return true;
+			}
+		};
+
+		struct null_atomic_int
+		{
+			int value;
+			null_atomic_int() = default;
+
+			explicit null_atomic_int(int val)
+				: value(val)
+			{
+			}
+
+			int load(std::memory_order) const
+			{
+				return value;
+			}
+
+			void store(int val)
+			{
+				value = val;
+			}
+		};
+
+	} // namespace details
+} // namespace spdlog
+
+#endif // __NULL_MUTEX_H__
+
+/*** End of inlined file: null_mutex.h ***/
+
+#include <cstdio>
+#include <mutex>
+
+#ifdef _WIN32
+
+#ifndef NOMINMAX
+#define NOMINMAX // prevent windows redefining min/max
+#endif
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+
+#include <windows.h>
+#endif
+
+namespace spdlog {
+	namespace details {
+		struct console_stdout
+		{
+			static std::FILE* stream()
+			{
+				return stdout;
+			}
+#ifdef _WIN32
+			static HANDLE handle()
+			{
+				return ::GetStdHandle(STD_OUTPUT_HANDLE);
+			}
+#endif
+		};
+
+		struct console_stderr
+		{
+			static std::FILE* stream()
+			{
+				return stderr;
+			}
+#ifdef _WIN32
+			static HANDLE handle()
+			{
+				return ::GetStdHandle(STD_ERROR_HANDLE);
+			}
+#endif
+		};
+
+		struct console_mutex
+		{
+			using mutex_t = std::mutex;
+			static mutex_t& mutex()
+			{
+				static mutex_t s_mutex;
+				return s_mutex;
+			}
+		};
+
+		struct console_nullmutex
+		{
+			using mutex_t = null_mutex;
+			static mutex_t& mutex()
+			{
+				static mutex_t s_mutex;
+				return s_mutex;
+			}
+		};
+	} // namespace details
+} // namespace spdlog
+
+#endif // __CONSOLE_GLOBALS_H__
+
+/*** End of inlined file: console_globals.h ***/
+
+
 
 /*** Start of inlined file: spdlog.h ***/
 //
@@ -7692,60 +7829,6 @@ FMT_END_NAMESPACE
 #include <codecvt>
 #include <locale>
 #endif
-
-
-/*** Start of inlined file: null_mutex.h ***/
-//
-// Copyright(c) 2015 Gabi Melman.
-// Distributed under the MIT License (http://opensource.org/licenses/MIT)
-//
-#ifndef __NULL_MUTEX_H__
-#define __NULL_MUTEX_H__
-
-#pragma once
-
-#include <atomic>
-// null, no cost dummy "mutex" and dummy "atomic" int
-
-namespace spdlog {
-	namespace details {
-		struct null_mutex
-		{
-			void lock() {}
-			void unlock() {}
-			bool try_lock()
-			{
-				return true;
-			}
-		};
-
-		struct null_atomic_int
-		{
-			int value;
-			null_atomic_int() = default;
-
-			explicit null_atomic_int(int val)
-				: value(val)
-			{
-			}
-
-			int load(std::memory_order) const
-			{
-				return value;
-			}
-
-			void store(int val)
-			{
-				value = val;
-			}
-		};
-
-	} // namespace details
-} // namespace spdlog
-
-#endif // __NULL_MUTEX_H__
-
-/*** End of inlined file: null_mutex.h ***/
 
 // visual studio upto 2013 does not support noexcept nor constexpr
 #if defined(_MSC_VER) && (_MSC_VER < 1900)
@@ -10766,89 +10849,6 @@ inline std::shared_ptr<spdlog::logger> spdlog::logger::clone(std::string logger_
 #ifndef SPDLOG_H
 
 #endif
-
-
-/*** Start of inlined file: console_globals.h ***/
-#ifndef __CONSOLE_GLOBALS_H__
-#define __CONSOLE_GLOBALS_H__
-
-#pragma once
-//
-// Copyright(c) 2018 Gabi Melman.
-// Distributed under the MIT License (http://opensource.org/licenses/MIT)
-//
-
-#include <cstdio>
-#include <mutex>
-
-#ifdef _WIN32
-
-#ifndef NOMINMAX
-#define NOMINMAX // prevent windows redefining min/max
-#endif
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN
-#endif
-
-#include <windows.h>
-#endif
-
-namespace spdlog {
-	namespace details {
-		struct console_stdout
-		{
-			static std::FILE* stream()
-			{
-				return stdout;
-			}
-#ifdef _WIN32
-			static HANDLE handle()
-			{
-				return ::GetStdHandle(STD_OUTPUT_HANDLE);
-			}
-#endif
-		};
-
-		struct console_stderr
-		{
-			static std::FILE* stream()
-			{
-				return stderr;
-			}
-#ifdef _WIN32
-			static HANDLE handle()
-			{
-				return ::GetStdHandle(STD_ERROR_HANDLE);
-			}
-#endif
-		};
-
-		struct console_mutex
-		{
-			using mutex_t = std::mutex;
-			static mutex_t& mutex()
-			{
-				static mutex_t s_mutex;
-				return s_mutex;
-			}
-		};
-
-		struct console_nullmutex
-		{
-			using mutex_t = null_mutex;
-			static mutex_t& mutex()
-			{
-				static mutex_t s_mutex;
-				return s_mutex;
-			}
-		};
-	} // namespace details
-} // namespace spdlog
-
-#endif // __CONSOLE_GLOBALS_H__
-
-/*** End of inlined file: console_globals.h ***/
 
 #include <memory>
 #include <mutex>
