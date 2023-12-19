@@ -34,17 +34,20 @@
 #include "dmutil.h"
 #include "dmformat.h"
 #include "dmtime.h"
+
+#define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
+
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 
-
-#define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->critical(__VA_ARGS__)
-#define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->error(__VA_ARGS__)
-#define LOG_WARN(...)  CDMLog::Instance()->GetLogger()->warn(__VA_ARGS__)
-#define LOG_INFO(...)  CDMLog::Instance()->GetLogger()->info(__VA_ARGS__)
-#define LOG_DEBUG(...) CDMLog::Instance()->GetLogger()->debug(__VA_ARGS__)
-#define LOG_TRACE(...) CDMLog::Instance()->GetLogger()->trace(__VA_ARGS__)
+#define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::critical, __VA_ARGS__)
+#define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::err, __VA_ARGS__)
+#define LOG_WARN(...)  CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::warn, __VA_ARGS__)
+#define LOG_INFO(...)  CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::info, __VA_ARGS__)
+#define LOG_DEBUG(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::debug, __VA_ARGS__)
+#define LOG_TRACE(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::trace, __VA_ARGS__)
 
 class CDMLog
 {
@@ -57,14 +60,19 @@ public:
 
         auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
         console_sink->set_level(spdlog::level::warn);
-        console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
+        console_sink->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%@][%t][%l] %v");
 
         auto daily_logger = std::make_shared<spdlog::sinks::daily_file_sink_mt>(strFile,
             2, 30);
         daily_logger->set_level(spdlog::level::trace);
-        daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%t][%l] %v");
-        spdlog::logger logger(DMGetExeName(), { console_sink, daily_logger });
-        logger.set_level(spdlog::level::trace);
+        daily_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%@][%t][%l] %v");
+
+        //auto rotating_logger = std::make_shared<spdlog::sinks::rotating_file_sink_mt>(strFile, 5 * 1024 * 1024, 7);
+        //rotating_logger->set_level(spdlog::level::trace);
+        //rotating_logger->set_pattern("[%Y-%m-%d %H:%M:%S %f] [%@][%t][%l] %v");
+
+        spdlog::logger logger(DMGetExeName(), {console_sink, daily_logger/*, rotating_logger*/});
+
         my_logger = logger.clone(DMGetExeName());
 
         my_logger->flush_on(spdlog::level::warn);
