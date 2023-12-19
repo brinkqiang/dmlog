@@ -40,7 +40,7 @@
 #include "spdlog/spdlog.h"
 #include "spdlog/sinks/daily_file_sink.h"
 #include "spdlog/sinks/stdout_color_sinks.h"
-//#include "spdlog/sinks/rotating_file_sink.h"
+#include "spdlog/sinks/rotating_file_sink.h"
 
 #define LOG_CRITICAL(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::critical, __VA_ARGS__)
 #define LOG_ERROR(...) CDMLog::Instance()->GetLogger()->log(spdlog::source_loc{SPDLOG_FILE_BASENAME(__FILE__), __LINE__, SPDLOG_FUNCTION}, spdlog::level::level_enum::err, __VA_ARGS__)
