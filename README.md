@@ -26,6 +26,5 @@ dmlog based on spdlog
 ```cpp
 ```
 ## Contacts
-[![Join the chat](https://badges.gitter.im/brinkqiang/dmlog/Lobby.svg)](https://gitter.im/brinkqiang/dmlog)
 
 ## Thanks
