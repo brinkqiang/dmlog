@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.21)
 
 PROJECT(dmlog)
 
@@ -20,4 +20,7 @@ MESSAGE(STATUS "VERSION: ${DMLOG_VERSION}")
 ADD_DEFINITIONS(-DUSE_DMLOG)
 
 ModuleImport("dmformat" "thirdparty/dmformat")
-ExeImport("test" "")
+
+if(PROJECT_IS_TOP_LEVEL)
+    ExeImport("test" "")
+endif()
