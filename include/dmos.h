@@ -29,51 +29,19 @@
 #endif
 
 #ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN 1
-#endif
-
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
-
-#ifndef _WINSOCK_DEPRECATED_NO_WARNINGS
-#define _WINSOCK_DEPRECATED_NO_WARNINGS
+#define WIN32_LEAN_AND_MEAN
 #endif
 
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
-
-#ifndef _SCL_SECURE_NO_WARNINGS
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
-#pragma warning (disable: 4996)
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 #include <assert.h>
-
 #include <csignal>
-
-#include <string>
-#include <vector>
-#include <queue>
-#include <deque>
-#include <list>
-
-#include <set>
-#include <map>
-
-#include <sstream>
-#include <fstream>
-#include <iostream>
-
 #include <winsock2.h>
-
-
 #include <windows.h>
 #include <direct.h>
 #include <process.h>
@@ -106,19 +74,7 @@ namespace std {
 
 #include <csignal>
 
-#include <string>
-#include <vector>
-#include <queue>
-#include <deque>
-#include <list>
-
-#include <set>
-#include <map>
-
-#include <sstream>
-#include <fstream>
-#include <iostream>
-
+#include <sys/time.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -133,8 +89,15 @@ namespace std {
 #include <unistd.h>
 
 #ifndef MAX_PATH
-#define MAX_PATH    PATH_MAX
+
+#ifndef PATH_MAX
+#define PATH_MAX 512
 #endif
+
+#define MAX_PATH    PATH_MAX
+
+#endif
+
 #define VSNPRINTF vsnprintf
 #define SleepMs(x) usleep(x*1000)
 #ifndef INFINITE
