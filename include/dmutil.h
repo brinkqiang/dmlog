@@ -195,7 +195,8 @@ static std::string DMGetRootPath()
         }
 
         char* p = strrchr( path, '/' );
-        *( p ) = '\0'; });
+        *( p ) = '\0';
+     });
     return path;
 #else
     static char path[MAX_PATH];
@@ -209,7 +210,8 @@ static std::string DMGetRootPath()
         }
 
         char* p = strrchr( path, '/' );
-        *( p ) = '\0'; });
+        *( p ) = '\0';
+    });
 
     return path;
 #endif
@@ -277,7 +279,9 @@ static std::string DMGetExeName()
             return path;
         }
 
-        strcpy(path, del + 1); });
+        strcpy(path, del + 1);
+        return path;
+    });
 
     return path;
 #elif __APPLE__
@@ -310,7 +314,10 @@ static std::string DMGetExeName()
             return path;
         }
 
-        strcpy(path, del + 1); });
+        strcpy(path, del + 1); 
+        return path;
+    });
+
     return path;
 #else
     static char path[MAX_PATH];
@@ -332,7 +339,9 @@ static std::string DMGetExeName()
             return path;
         }
 
-        strcpy(path, del + 1); });
+        strcpy(path, del + 1); 
+        return path;
+    });
 
     return path;
 #endif
