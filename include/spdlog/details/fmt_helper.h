@@ -50,7 +50,7 @@ namespace spdlog {
             {
                 using count_type = typename std::conditional<(sizeof(T) > sizeof(uint32_t)), uint64_t, uint32_t>::type;
 
-                return static_cast<unsigned>(fmt_helper::count_digits(static_cast<count_type>(n)));
+                return static_cast<unsigned>(fmt::detail::count_digits(static_cast<count_type>(n)));
             }
 
             template<size_t Buffer_Size>
