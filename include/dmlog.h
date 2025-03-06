@@ -33,8 +33,7 @@
 
 #include "dmutil.h"
 #include "dmformat.h"
-#include "dmtime.h"
-
+#include "dmchrono.h"
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include "spdlog/details/console_globals.h"
 #include "spdlog/spdlog.h"
