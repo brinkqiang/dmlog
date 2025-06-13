@@ -30,6 +30,15 @@ macro(ShowEnvironment)
   message(STATUS "================================================================================")
 endmacro(ShowEnvironment)
 
+function(print_package_vars PREFIX)
+    get_cmake_property(_vars VARIABLES)
+    foreach(_var IN LISTS _vars)
+        if(_var MATCHES "^${PREFIX}")
+            message(STATUS "package ${PREFIX} -> ${_var} = ${${_var}}")
+        endif()
+    endforeach()
+endfunction()
+
 macro(ModuleSetCompileOptions)
   cmake_policy(SET CMP0022 NEW)
   include(CheckCXXCompilerFlag)
@@ -38,6 +47,15 @@ macro(ModuleSetCompileOptions)
   endif()
   
   set(CMAKE_C_STANDARD 99)
+
+  set(CMAKE_BUILD_RPATH_USE_ORIGIN ON)
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+  
+  if(APPLE)
+    set(CMAKE_INSTALL_RPATH "@loader_path;@loader_path/../lib")  # macOS
+  elseif(UNIX)
+    set(CMAKE_INSTALL_RPATH "$ORIGIN:$ORIGIN/../lib")  # Linux
+  endif()
   
   if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     set(CMAKE_BUILD_TYPE "debug")
@@ -78,13 +96,13 @@ macro(ModuleSetCompileOptions)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE}")
     set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL}")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO}")
-
+      
+    link_libraries(Ws2_32)
     if(MSVC)
       set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /DEBUG /OPT:REF /OPT:NOICF /STACK:16777216")
       set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} /DEBUG /OPT:REF /OPT:NOICF /STACK:16777216")
       set(CMAKE_STATIC_LINKER_FLAGS "${CMAKE_STATIC_LINKER_FLAGS}")
-      
-      link_libraries(Ws2_32)
+
       add_definitions(/bigobj)
       add_definitions(/DNOMINMAX /DWIN32_LEAN_AND_MEAN=1 /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS /D_WINSOCK_DEPRECATED_NO_WARNINGS)
       add_definitions(/utf-8)
@@ -231,9 +249,10 @@ macro(ModuleSetWinCompilerFlags)
   endif (WIN32)
 endmacro()
 
-macro(AddInstall ModuleList)
+macro(AddInstall ModuleList HeadersDir)
     message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
     message(STATUS "CMAKE_BINARY_DIR: ${CMAKE_BINARY_DIR}")
+    message(STATUS "HeadersDir: ${HeadersDir}")
     message(STATUS "Install Path: ${CMAKE_INSTALL_PREFIX}/bin")
 
     message(STATUS "AddInstall ${ModuleList} ...")
@@ -249,6 +268,15 @@ macro(AddInstall ModuleList)
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
     endif(WIN32)
+
+    if (EXISTS "${HeadersDir}" AND NOT "${HeadersDir}" STREQUAL "")
+        message(STATUS "Installing headers from: ${HeadersDir}")
+        install(DIRECTORY "${HeadersDir}/"
+                DESTINATION include
+                FILES_MATCHING 
+                PATTERN "*.h"
+                PATTERN "*.hpp")
+    endif()
 
     configure_file(
             "${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_uninstall.cmake.in"
